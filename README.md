@@ -4,7 +4,7 @@ Proxies requests from Loggly's JavaScript client in an ASP.NET MVC application t
 Add the following to register the controller, most likely in `Application_Start()`:
 ```csharp
 RouteTable.Routes.MapMvcAttributeRoutes();
-ControllerBuilder.Current.DefaultNamespaces.Add("LogglyJavaScriptProxy.LogglyProxyController");
+ControllerBuilder.Current.DefaultNamespaces.Add(typeof(LogglyJavaScriptProxy.LogglyProxyController).ToString());
 ```
 Also, by default, the Loggly token is expected to be in the `Web.config`:
 ```xml
