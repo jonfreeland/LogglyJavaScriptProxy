@@ -15,7 +15,6 @@ namespace LogglyJavascriptProxy.Web {
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             RouteTable.Routes.MapMvcAttributeRoutes();
-            ControllerBuilder.Current.DefaultNamespaces.Add("LogglyJavascriptProxy.LogglyProxyController");
         }
     }
 }

@@ -7,7 +7,7 @@
     <authors>Jonathan Freeland</authors>
     <owners>Jonathan Freeland</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Proxy requests from Loggly's JavaScript client and protect your token.</description>
+    <description>Adds a controller that can proxy requests from Loggly's JavaScript client to help protect your token.</description>
     <copyright>Copyright © 2015 Jonathan Freeland</copyright>
     <tags>loggly javascript proxy token asp.net mvc</tags>
     <language>en-us</language>
