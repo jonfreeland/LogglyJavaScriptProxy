@@ -39,6 +39,11 @@ namespace $rootnamespace$.Controllers {
             token = LogglyToken; // override with real token here
             var externalRequest = (HttpWebRequest)WebRequest.Create($"https://logs-01.loggly.com/inputs/{token}/tag/{tags}");   // TODO: make URL configurable
             CopyRequestHeadersContent(this.Request, externalRequest);
+            if (Request.UserHostAddress != "::1") {
+                externalRequest.Headers.Add("X-Real-IP", Request.UserHostAddress);
+                externalRequest.Headers.Add("X-Forwarded-For", Request.UserHostAddress);
+            }
+
             HttpWebResponse externalResponse;
             try {
                 externalResponse = (HttpWebResponse)externalRequest.GetResponse();
@@ -57,39 +62,6 @@ namespace $rootnamespace$.Controllers {
         /// <param name="destination">The request to copy to</param>
         private void CopyRequestHeadersContent(HttpRequestBase source, HttpWebRequest destination) {
             destination.Method = source.HttpMethod;
-
-            // Copy unrestricted headers (including cookies, if any)
-            foreach (var headerKey in source.Headers.AllKeys) {
-                switch (headerKey) {
-                    case "Connection":
-                    case "Content-Length":
-                    case "Date":
-                    case "Expect":
-                    case "Host":
-                    case "If-Modified-Since":
-                    case "Range":
-                    case "Transfer-Encoding":
-                    case "Proxy-Connection":
-                        // Let IIS handle these
-                        break;
-                    case "Accept":
-                    case "Content-Type":
-                    case "Referer":
-                    case "User-Agent":
-                        // Restricted - copied below
-                        break;
-                    default:
-                        destination.Headers[headerKey] = source.Headers[headerKey];
-                        break;
-                }
-            }
-
-            // Copy restricted headers
-            if (source.AcceptTypes.Any())
-                destination.Accept = string.Join(",", source.AcceptTypes);
-            destination.ContentType = source.ContentType;
-            destination.Referer = source.UrlReferrer.AbsoluteUri;
-            destination.UserAgent = source.UserAgent;
 
             // Copy content (if content body is allowed)
             if (source.HttpMethod != "GET"
